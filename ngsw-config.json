@@ -26,5 +26,15 @@
         ]
       }
     }
-  ]
+  ],
+  "dataGroups": [{
+    "name": "api-call",
+    "urls": ["abc"],
+    "cacheConfig": {
+      "maxAge": "1d",
+      "maxSize": 15,
+      "strategy": "freshness",
+      "timeout": "5s"
+    }
+  }]
 }

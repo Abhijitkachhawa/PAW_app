@@ -1,29 +1,29 @@
 importScripts('./ngsw-worker.js');
 
 self.addEventListener('sync', (event) => {
-  if (event.tag === ' register') {
+  if (event.tag === 'register') {
     // call method
-    event.waitUntil(getDataAndSend());
+    event.waitUntil(getDataAndSend("register"));
+  }else if (event.tag === 'profileUpdate') {
+    event.waitUntil(getDataAndSend("profileUpdate"));
   }
 });
 
-function addData(userName) {
+function addData(data) {
   //indexDb
-  let obj = {
-    name: userName,
-  };
-  fetch('http://localhost:3000/data', {
+  
+  fetch('', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(obj),
+    body: JSON.stringify(data),
   })
     .then(() => Promise.resolve())
     .catch(() => Promise.reject());
 }
 
-function getDataAndSend() {
+function getDataAndSend(type) {
   let db;
   const request = indexedDB.open('my-db');
   request.onerror = (event) => {
@@ -31,13 +31,24 @@ function getDataAndSend() {
   };
   request.onsuccess = (event) => {
     db = event.target.result;
-    getData(db);
+    getData(db,type);
   };
 }
 
-function getData(db) {
-  const transaction = db.transaction(['user']);
-  const objectStore = transaction.objectStore('user');
+function getData(db,type) {
+ let table=""
+  switch (type) {
+    case 'register':
+      table='user'
+      break;
+      case 'profileUpdate':
+        table="profile"
+      break;
+    default:
+      break;
+  }
+  const transaction = db.transaction([table]);
+  const objectStore = transaction.objectStore(table);
   const request = objectStore.get('UserData');
   request.onerror = (event) => {
     // Handle errors!

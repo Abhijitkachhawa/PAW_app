@@ -13,13 +13,19 @@ export class IndexedDBService {
   async connectToDb() {
     this.db = await openDB<any>('my-db', 1, {
       upgrade(db) {
+        db.createObjectStore('profile');
         db.createObjectStore('user');
+       
       },
+      
     });
   }
 
   addUser(data: any) {
     return this.db.put('user', JSON.stringify(data), data.email);
+  }
+  addProfile(data: any) {
+    return this.db.put('profile', JSON.stringify(data), data.email);
   }
 
   deleteUser(key: string) {

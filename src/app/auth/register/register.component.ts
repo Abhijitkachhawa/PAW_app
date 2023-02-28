@@ -1,3 +1,5 @@
+import { Router, Routes } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { IndexedDBService } from './../../../services/indexed-db.service';
 import { AuthService } from './../auth.service';
 import { Component, OnInit } from '@angular/core';
@@ -14,7 +16,9 @@ export class RegisterComponent implements OnInit {
   confirmPass:any
   constructor( private fb : FormBuilder,
    private authService :AuthService,
-   private indexedDBService :IndexedDBService){
+   private indexedDBService :IndexedDBService,
+   private toastr :ToastrService,
+   private router: Router){
 
   }
 ngOnInit(): void {
@@ -31,7 +35,6 @@ ngOnInit(): void {
 submit(){
    if(this.rform.controls['password'].value === this.rform.controls['confirmPassword'].value){
 
-    this.rform.controls['password'].patchValue(this.pass)
     this.postSync(this.rform.value)
     
   }
@@ -47,12 +50,17 @@ submit(){
         console.log(res);
       },
       (err:any) => {
-        console.log("🚀 ~ file: register.component.ts:59 ~ RegisterComponent ~ postSync ~ err:", err)
+      if( !navigator.onLine){
         this.indexedDBService
-          .addUser(data)
-          .then(this.backgroundSync)
-          .catch(console.log);
-        //this.backgroundSync();
+        .addUser(data)
+        .then((e)=>{
+          this.backgroundSync()
+          this.toastr.success('Registration succesful', `Succesful`); 
+          this.router.navigate(['/auth/login'])
+        })
+        .catch(console.log);
+       }
+
       }
     );
   }
@@ -60,8 +68,12 @@ submit(){
 
   backgroundSync() {
     navigator.serviceWorker.ready
-      .then((swRegistration:any) => swRegistration.sync.register('register'))
+      .then((swRegistration:any) => {
+       return swRegistration.sync.register('register')
+      
+      })
       .catch(console.log);
+  
   }
    
 }

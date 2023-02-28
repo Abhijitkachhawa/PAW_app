@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:prod": "npm run build -- --configuration production --aot"
   },
   "private": true,
   "dependencies": {
@@ -22,6 +23,7 @@
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.3",
     "idb": "^7.1.1",
+    "ngx-toastr": "^16.0.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

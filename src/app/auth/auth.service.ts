@@ -13,4 +13,10 @@ export class AuthService {
   register(data:any){
    return  this.http.post(" ",data)
 }
+login(data:any){
+  return this.http.post('',data)
+}
+profileUpdate(data:any){
+  return this.http.post('',data)
+}
 }

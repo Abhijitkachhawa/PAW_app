@@ -1,7 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from './../auth.service';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +13,9 @@ import { Component, OnInit } from '@angular/core';
 export class LoginComponent implements OnInit {
   constructor(private fb :FormBuilder,
     private auth : AuthService,
-    private router : Router){
+    private router : Router,
+    private http :HttpClient
+    ){
 
   }
   logForm!: FormGroup
@@ -20,6 +24,7 @@ ngOnInit(): void {
       email: new FormControl(''),
       password: new FormControl('')
   })
+  this.printData()
 }
 
 login(){
@@ -55,4 +60,42 @@ login(){
     }
   })
 }
+ fileArr:any[]=[]
+ printData(){
+ 
+   this.http.get('https://bornsir.s3.amazonaws.com/static/566947fb-cee3-4b46-a374-967af33b76d2/764cb6ee-7a05-4899-a9d1-196c8966d1b4/2054854/manifest.json')
+  .subscribe(async(res:any)=>{
+      this.fileArr =  res.splice(0,20)
+     await this.apicall()
+      
+  })
+  
+}
+async  apicall(){
+  for  (const file of this.fileArr) {
+   
+ try {
+  const filter =  await  lastValueFrom( this.http.get(`https://bornsir.s3.amazonaws.com/static/566947fb-cee3-4b46-a374-967af33b76d2/764cb6ee-7a05-4899-a9d1-196c8966d1b4/2054854/`+file,{
+   observe:'response',
+   responseType:'blob'
+  }) )
+ if(filter.status===200){
+  console.log('Successfully downloaded');
+  
+ }else{
+  console.log('Not downloaded');
+ }
+ } catch (error) {
+  console.log('Not downloaded');
+  console.log(error);
+  
+ }
+ 
+  }
+
+
+ }
+
+
+
 }

@@ -51,14 +51,27 @@ submit(){
       },
       (err:any) => {
       if( !navigator.onLine){
-        this.indexedDBService
-        .addUser(data)
-        .then((e)=>{
-          this.backgroundSync()
-          this.toastr.success('Registration succesful', `Succesful`); 
-          this.router.navigate(['/auth/login'])
-        })
-        .catch(console.log);
+      let  alreadyUser :any;
+         this.indexedDBService.getDBDate('user',data.email).then((e)=>{
+          alreadyUser =e
+          console.log("🚀 ~ file: register.component.ts:56 ~ RegisterComponent ~ postSync ~ alreadyUser:", alreadyUser)
+          if(alreadyUser?.email === data?.email){
+            this.toastr.error('Email already exists', `Error`); 
+          }else{
+            this.indexedDBService
+            .addUser(data)
+            .then((e)=>{
+              this.backgroundSync()
+              this.toastr.success('Registration succesful', `Succesful`); 
+              this.router.navigate(['/auth/login'])
+            })
+            .catch(console.log);
+          }
+      })
+     
+
+
+       
        }
 
       }

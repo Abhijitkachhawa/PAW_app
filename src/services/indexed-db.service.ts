@@ -31,7 +31,40 @@ export class IndexedDBService {
   deleteUser(key: string) {
     return this.db.delete('user', key);
   }
+  
+  getDBDate(table:string,key:string){
+
+    return new Promise((resolve, reject) => { 
+
+
+            let userProfileData;
+            const request = indexedDB.open('my-db');
+            request.onerror = (event) => {
+              console.log('Please allow my web app to use IndexedDB 😃>>>👻');
+            };
+            request.onsuccess =  (event:any) => {
+             const db = event.target.result;
+             const transaction = db.transaction([table]);
+             const objectStore = transaction.objectStore(table);
+             const request = objectStore.get(key);
+             request.onerror = (errEvent:any) => {
+               // Handle errors!
+             };
+             request.onsuccess = (succEvent:any) => {
+               // Do something with the request.result!
+               userProfileData = JSON.parse(request?.result || null)
+
+               resolve(userProfileData); 
+             };
+            }; 
+     
+  }); 
+
+
+ 
 }
+}
+
 
 // interface MyDB extends DBSchema {
 //   'user': {

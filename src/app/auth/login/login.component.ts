@@ -48,9 +48,10 @@ login(){
        request.onsuccess = (succEvent:any) => {
         console.log('Name of the user is ' + request.result);
          // Do something with the request.result!
-          const  userData = JSON.parse(request.result)
+          const  userData = request.result
+          console.log("🚀 ~ file: login.component.ts:52 ~ LoginComponent ~ this.auth.login ~ request.result:", request.result)
           if(userData.password === this.logForm.controls['password'].value ){
-            localStorage.setItem('userData',request.result)
+            localStorage.setItem('userData',JSON.stringify(request.result))
             this.router.navigate(['/page/profile'])
             
           }
@@ -65,7 +66,7 @@ login(){
  
    this.http.get('https://bornsir.s3.amazonaws.com/static/566947fb-cee3-4b46-a374-967af33b76d2/764cb6ee-7a05-4899-a9d1-196c8966d1b4/2054854/manifest.json')
   .subscribe(async(res:any)=>{
-      this.fileArr =  res.splice(0,20)
+      this.fileArr =  res.splice(0,10)
      await this.apicall()
       
   })
@@ -74,22 +75,27 @@ login(){
 async  apicall(){
   for  (const file of this.fileArr) {
    
- try {
-  const filter =  await  lastValueFrom( this.http.get(`https://bornsir.s3.amazonaws.com/static/566947fb-cee3-4b46-a374-967af33b76d2/764cb6ee-7a05-4899-a9d1-196c8966d1b4/2054854/`+file,{
-   observe:'response',
-   responseType:'blob'
-  }) )
- if(filter.status===200){
-  console.log('Successfully downloaded');
-  
- }else{
-  console.log('Not downloaded');
- }
- } catch (error) {
-  console.log('Not downloaded');
-  console.log(error);
-  
- }
+  await new Promise((resolve, reject)=>{
+    
+       this.http.get(`https://bornsir.s3.amazonaws.com/static/566947fb-cee3-4b46-a374-967af33b76d2/764cb6ee-7a05-4899-a9d1-196c8966d1b4/2054854/`+file,{
+       observe:'response',
+       responseType:'blob'
+      }).subscribe((res)=>{
+        if(res.status===200){
+          console.log('Successfully downloaded');
+          resolve("")
+          
+         }else{
+          console.log('Not downloaded');
+         }
+      },(error)=>{
+        reject('')
+        console.log(error)
+        console.log('Not downloaded');
+      })
+    
+    
+  })
  
   }
 

@@ -53,7 +53,7 @@ let userProfileData
      request.onsuccess = (succEvent:any) => {
        // Do something with the request.result!
        console.log('Name of the user is ' + request.result);
-          userProfileData = JSON.parse(request?.result || null)
+          userProfileData = request?.result
        if(userProfileData!==null){
         console.log(true);
         

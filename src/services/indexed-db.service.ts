@@ -22,10 +22,10 @@ export class IndexedDBService {
   }
 
   addUser(data: any) {
-    return this.db.put('user', JSON.stringify(data), data.email);
+    return this.db.put('user',data, data.email);
   }
   addProfile(data: any) {
-    return this.db.put('profile', JSON.stringify(data), data.email);
+    return this.db.put('profile', data, data.email);
   }
 
   deleteUser(key: string) {
@@ -52,7 +52,7 @@ export class IndexedDBService {
              };
              request.onsuccess = (succEvent:any) => {
                // Do something with the request.result!
-               userProfileData = JSON.parse(request?.result || null)
+               userProfileData = request?.result
 
                resolve(userProfileData); 
              };

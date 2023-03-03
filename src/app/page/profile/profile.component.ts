@@ -38,7 +38,7 @@ export class ProfileComponent implements OnInit {
 
     })
 let userProfileData
-    const request = indexedDB.open('my-db');
+    const request = window.indexedDB.open('my-db');
     request.onerror = (event) => {
       console.log('Please allow my web app to use IndexedDB 😃>>>👻');
     };
@@ -54,7 +54,7 @@ let userProfileData
        // Do something with the request.result!
        console.log('Name of the user is ' + request.result);
           userProfileData = request?.result
-       if(userProfileData!==null){
+       if(userProfileData){
         console.log(true);
         
         this.profile.patchValue(userProfileData)

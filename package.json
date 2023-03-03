@@ -25,6 +25,7 @@
     "idb": "^7.1.1",
     "ngx-toastr": "^16.0.2",
     "rxjs": "~7.5.0",
+    "test_input_alart": "^0.1.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
   },

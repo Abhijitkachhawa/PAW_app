@@ -15,6 +15,7 @@ export class IndexedDBService {
       upgrade(db) {
         db.createObjectStore('profile');
         db.createObjectStore('user');
+        db.createObjectStore('apiData');
        
       },
       
@@ -26,6 +27,13 @@ export class IndexedDBService {
   }
   addProfile(data: any) {
     return this.db.put('profile', data, data.email);
+  }
+  addApiData(data: any) {
+    for (let index = 0; index < data.length; index++) {
+      
+      this.db.put('apiData', {file:data[index].file,name:data[index].name}, [data[index].key,data[index].name]);
+    }
+   
   }
 
   deleteUser(key: string) {
